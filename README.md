@@ -1,20 +1,27 @@
-# Zairza Web Backend
+# Skills++ Backend
 
-The official backend of Zairza !
+The official backend of Skills++ Event !
+
+## Table of Contents
+
+- [Manual Installation](#manual-installation)
+- [Project Structure](#project-structure)
+- [Error Handling](#error-handling)
+- [Logging](#logging)
 
 ## Manual Installation
 
 Clone the repo :
 
 ```bash
-git clone https://github.com/subrat0796/Zairza-web.git
-cd Zairza-web
+git clone https://github.com/zairza-cetb/skills-backend.git
+cd skills-backend
 ```
 
 Install the dependencies :
 
 ```bash
-cd backend && npm install
+npm install
 ```
 
 Set the environment variables:
@@ -24,12 +31,6 @@ cp .env.example .env
 
 #open .env and modify the variables according to your needs
 ```
-
-## Table of Contents
-
-- [Project Structure](#project-structure)
-- [Error Handling](#error-handling)
-- [Logging](#logging)
 
 ## Project Structure
 
@@ -43,9 +44,9 @@ src\
      |--models\       # Mongoose models (data layer)
      |--routes\       # Routes
      |--services\     # Business logic (service layer)
+     |--utils\        # Utility classes and functions
      |--validations\  # Request data validation schemas
- |--config\           # Envoriment variables and configuration related things
- |--app.js            # Express app
+ |--config\           # Environment variables and configuration related things
  |--index.js          # App entry point
 ```
 
