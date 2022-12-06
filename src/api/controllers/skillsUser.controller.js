@@ -36,13 +36,13 @@ const updateSkillUserDetails = catchAsync(async (req, res, next) => {
 const onboardingSkillUser = catchAsync(async (req, res, next) => {
   const { body, user } = req;
 
-  const signUpUser = await SkillUserService.updateSkillsUser(user, body);
+  const registeredUser = await SkillUserService.onboardingSkillUser(user, body);
 
   return res.status(httpStatus.CREATED).json({
     code: httpStatus.ACCEPTED,
     status: httpStatus[httpStatus.ACCEPTED],
     message: "User update succesfully",
-    data: signUpUser,
+    data: registeredUser,
   });
 });
 
@@ -80,11 +80,12 @@ const mentorSubmitAssignment = catchAsync(async (req, res, next) => {
 
 const getMentorDashboardData = catchAsync(async (req, res, next) => {
   const { user } = req;
+  const {domainId} = req.query;
   const mentorDashboardData = await SkillUserService.getMentorDashboardData(
-    user
+    user,domainId
   );
 
-  return res.status(httpStatus.FOUND).json({
+  return res.status(httpStatus.ACCEPTED).json({
     code: httpStatus.FOUND,
     status: httpStatus[httpStatus.FOUND],
     message: "Mentor dashboard data fetched succesfully",
@@ -98,7 +99,7 @@ const getStudentDashboardData = catchAsync(async (req, res, next) => {
     user
   );
   
-  return res.status(httpStatus.FOUND).json({
+  return res.status(httpStatus.ACCEPTED).json({
     code: httpStatus.FOUND,
     status: httpStatus[httpStatus.FOUND],
     message: "Student dashboard data fetched succesfully",

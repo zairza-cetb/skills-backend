@@ -17,28 +17,33 @@ const loginSkillsUser = async (firebaseUid) => {
     })
       .populate("domain")
       .exec();
+    // console.log({
+    //   user: userInDb.toObject(),
+    //   domain: domainRegistration?.domain.toObject().domainName ?? "",
+    //   registerId: domainRegistration?._id ?? "",
+    // })
     return {
-      user: userInDb.toObject(),
+      ...userInDb.toObject(),
       domain: domainRegistration?.domain.toObject().domainName ?? "",
-      registerId: domainRegistration._id ?? "",
+      registerId: domainRegistration?._id ?? "",
     };
   } else {
-    const domain = Domains.aggregate([
+    // console.log(userInDb._id)
+    const domain = await Domains.aggregate([
       {
         $unwind: "$mentors",
-      },
+      }
+      ,
       {
         $match: {
-          "mentors.user": mongoose.Types.ObjectId(userInDb._id),
+           mentors : mongoose.Types.ObjectId(userInDb._id) ,
         },
-      },
-      {
-        $unwind: "$domainRegistrations",
-      },
+      }
     ]);
+    const domainNames = domain.map((obj)=>({domainName:obj.domainName, domainId:obj._id})); // Changed Mentor Response
     return {
-      user: userInDb.toObject(),
-      domain: domain.domainName,
+      ...userInDb.toObject(),
+      domain: domainNames,
     };
   }
 };
@@ -78,7 +83,9 @@ const upDateSkillsUser = async (user, body) => {
     branch,
     domain,
     zairzaMember,
+    role
   } = body;
+
 
   const updatedUser = await SkillUser.findByIdAndUpdate(
     user._id,
@@ -87,6 +94,7 @@ const upDateSkillsUser = async (user, body) => {
         name,
         phoneNumber,
         registrationNumber,
+        role,
         ...(wing && { wing }),
         branch,
         zairzaMember,
@@ -104,7 +112,7 @@ const upDateSkillsUser = async (user, body) => {
     throw new ApiError(httpStatus.NOT_FOUND, "Domain not found");
   }
 
-  if (user.role === "member") {
+  if (role === "member") {
     const registerDomain = await DomainRegistrations.create({
       domain: domainFetched._id,
       user: updatedUser._id,
@@ -120,8 +128,9 @@ const upDateSkillsUser = async (user, body) => {
       data: {
         name: updatedUser.name,
         domain: domainFetched.domainName,
+        resourceLink: domainFetched.tasks[0].resourceLink,
         forumLink:
-          `href='${domainFetched.discussionLink}'` ?? 'target="_blank"',
+          `https://zairzaskills2k22.slack.com/archives/C0465PUJ8V6`,
       },
     });
 
